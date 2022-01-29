@@ -10,7 +10,6 @@ const computerPlay =()=>{
     }
 }
 const playRound = (playerSelection,computerSelection)=>{
-    playerSelection.toLowerCase();
     let tie = "It's a tie both selected " + playerSelection;
     let win = "You win! " + playerSelection + " beats " + computerSelection;
     let lose = "You lose! " + computerSelection + " beats " + playerSelection;
@@ -49,12 +48,13 @@ const playRound = (playerSelection,computerSelection)=>{
 }
 
 const game = ()=>{
-    let count = 0;
+    let winCount = 0;
     for (let index = 0; index <= 4; index++) {
         let playerSelection = prompt("Select rock, paper or scissors");
+        playerSelection.toLowerCase();
         if (playerSelection == "rock" || playerSelection == "scissors" || playerSelection == "paper") {
             let round = playRound(playerSelection,computerPlay());
-            if(round.slice(4,7) == "win") count++;
+            if(round.slice(4,7) == "win") winCount++;
             if(round.slice(0,1) == "I") index--;
             console.log(round);
         }
@@ -63,6 +63,6 @@ const game = ()=>{
             alert("Select a valid option");
         }
     }
-    return `You win ${count} of 5 games`;
+    return `You win ${winCount} of 5 games`;
 }
 console.log(game());
