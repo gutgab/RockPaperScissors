@@ -1,3 +1,12 @@
+const btns = document.querySelectorAll(".btn");
+const actualRound = document.querySelector(".actualRound");
+const count = document.querySelector(".count");
+const result = document.querySelector(".result");
+const visual = document.querySelector(".visual");
+let winCount = 0;
+let tieCount = 0;
+let loseCount = 0;
+
 const computerPlay = () => {
     let x = Math.random() * 10;
     if (x <= 3.3) {
@@ -47,27 +56,35 @@ const playRound = (playerSelection, computerSelection) => {
     }
 }
 const game = (playerSelection) => {
-        let round = playRound(playerSelection, computerPlay());
-        if (round.slice(4, 7) == "win") winCount++;
-        else if (round.slice(0, 1) == "I") tieCount++;
-        else loseCount++;
-        console.log(round);
-        console.log(winCount);
-        return round;
+    let cpu = computerPlay();
+    let round = playRound(playerSelection, cpu);
+    if (round.slice(4, 7) == "win") winCount++;
+    else if (round.slice(0, 1) == "I") tieCount++;
+    else loseCount++;
+    return [round, cpu];
 }
-const btns = document.querySelectorAll(".btn");
-const actualRound = document.querySelector(".actualRound");
-const count = document.querySelector(".count");
-const result = document.querySelector(".result");
-let winCount = 0;
-let tieCount = 0;
-let loseCount = 0;
 
-btns.forEach(btn => btn.addEventListener("click",()=>{
-    actualRound.textContent = game(btn.id);
-    count.textContent = `Wins: ${winCount} Ties: ${tieCount} Losses: ${loseCount}`;
-    if(winCount>2 || loseCount>2){
-        if(winCount>loseCount) result.textContent = "You won";
+btns.forEach(btn => btn.addEventListener("click", () => {
+    const img1 = document.createElement("IMG");
+    const img2 = document.createElement("IMG");
+    const vs = document.createElement("h3");
+    const newGame = game(btn.id);
+    const playerChoice = btn.id;
+    const cpuChoice = newGame[1];
+    vs.textContent = "VS";
+    img1.src = `assets/${playerChoice}.png`;
+    img2.src = `assets/${cpuChoice}.png`;
+    while(visual.lastChild){visual.removeChild(visual.lastChild)}
+    visual.appendChild(img1);
+    visual.appendChild(vs);
+    visual.appendChild(img2);
+    actualRound.textContent = newGame[0];
+    if (newGame[0].slice(4, 7) == "win") {img1.classList.add("won");img2.classList.add("lost");}
+    else if (newGame[0].slice(0, 1) == "I") {img1.classList.add("tied");img2.classList.add("tied");}
+    else {img1.classList.add("lost");img2.classList.add("won");}
+    count.textContent = `Wins: ${winCount}   Ties: ${tieCount}   Losses: ${loseCount}`;
+    if (winCount > 2 || loseCount > 2) {
+        if (winCount > loseCount) result.textContent = "You won";
         else result.textContent = "You lost";
         winCount = 0;
         tieCount = 0;
